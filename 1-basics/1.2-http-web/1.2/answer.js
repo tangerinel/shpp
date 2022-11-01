@@ -18,6 +18,35 @@ function readHttpLikeInput() {
     return res;
 }
 
+
+let contents = readHttpLikeInput();
+
+function outputHttpResponse(statusCode, statusMessage, headers, body) {
+    console.log(
+        `HTTP/1.1 ${statusCode} ${statusMessage}
+Date: ${new Date().toUTCString()}
+Server: Apache/2.2.14 (Win32)
+Content-Length: ${(''+body).length}
+Connection: Closed
+Content-Type: text/html; charset=utf-8
+        
+${body}`
+        );
+}
+
+function processHttpRequest($method, $uri, $headers, $body) {
+    if (!$uri.startsWith('/sum')) {
+        outputHttpResponse(404, 'Not Found', $headers, 'not found');
+    } else if (!(/\?nums=/).test($uri)|| $method !== 'GET') {
+        outputHttpResponse(400, 'Bad Request', $headers, 'not found');
+    } else {
+        let initialValue = 0;
+        let sumOfNums = $uri.slice(10).split(',').reduce((a, b) => +a + +b, initialValue)
+        outputHttpResponse(200,'OK', $headers, sumOfNums)
+    }
+
+}
+
 function parseTcpStringAsHttpRequest(string) {
     let tcp = string.split('\n');
     let rawHeaders = tcp.filter(line => line.includes(':')).map(header => header.split(':'));
@@ -25,7 +54,6 @@ function parseTcpStringAsHttpRequest(string) {
     for (let header of rawHeaders) {
         headers[header[0]] = header[1].trim()
     }
-
     return {
         method: tcp[0].split(' ')[0],
         uri: tcp[0].split(' ')[1],
@@ -34,6 +62,5 @@ function parseTcpStringAsHttpRequest(string) {
     };
 }
 
-let contents = readHttpLikeInput();
 http = parseTcpStringAsHttpRequest(contents);
-console.log(JSON.stringify(http, undefined, 2));
+processHttpRequest(http.method, http.uri, http.headers, http.body);
