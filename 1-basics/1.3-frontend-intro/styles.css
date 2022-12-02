@@ -1,0 +1,36 @@
+img {
+    padding: 5px;
+    margin: 5px;
+    float: right;
+    object-fit: cover;
+    width: 400px;
+    height: 400px;
+}
+
+p.normal {
+    font-family: 'Barlow', sans-serif;
+    text-align: left;
+    padding: 5px;
+}
+
+p.role {
+    font: lighter 25px 'Barlow', sans-serif;
+    text-align: left;
+    padding: 5px;
+}
+
+h1 {
+    font-family: 'Barlow', sans-serif;
+    text-align: left;
+    padding: 5px;
+}
+
+q{
+    color: gray;
+    font-style: italic;
+}
+
+address{
+    font: italic 13px 'Barlow', sans-serif;
+    display: block;
+  }

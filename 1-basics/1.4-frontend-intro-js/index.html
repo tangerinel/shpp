@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Task 1.4</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body onload="initText()">
+    <h1>Part 1-2</h1>
+    <div style="display:inline-block">
+        <div class="blackbox" id="box1"></div>
+        <button class="button" onclick="getElementById('box1').style.display = 'none'">CSS</button>
+    </div>
+    <div style="display:inline-block">
+        <div class="blackbox" id="box2"></div>
+        <button class="button" onclick="removeElement('box2')">JS</button>
+    </div>
+
+    <div style="display:inline-block">
+        <div class="blackbox" id="box3"></div>
+        <button class="button" onclick="switchVisibility('box3')">CSS+JS</button>
+    </div>
+
+    <h1>Part 3</h1>
+    <div id="blackBoxes">
+        <div class="blackbox inlinebox" id="box4"></div>
+        <div class="blackbox inlinebox" id="box5"></div>
+        <div class="blackbox inlinebox" id="box6"></div>
+        <div class="blackbox inlinebox" id="box7"></div>
+        <div class="blackbox inlinebox" id="box8"></div>
+    </div>
+    <button class="button" onclick="switchVisibility('blackBoxes')">hide/show boxes</button>
+
+    <h1>Part 4</h1>
+    <input type="text" id="selector" name="selector">
+    <button class="button" onclick="switchVisibility(document.getElementById('selector').value)">hide/show
+        element</button>
+
+    <h1>Part 5</h1>
+    <div id="yellowbox"></div>
+
+    <h1>Part 6</h1>
+    <div id="redbox" class="hidden"></div>
+    <button class="button" onmouseover="showElement('redbox')" onmouseout="hideElement('redbox')">hide/show
+        element</button>
+
+    <h1>Part 7</h1>
+    <div id="greenbox" class="hidden"></div>
+    <input type="text" id="green" name="green" onfocus="showElement('greenbox')" oninput="hideElement('greenbox')">
+
+    <h1>Part 8</h1>
+    <p>Please input image link:</p>
+    <input id="link">
+    <button type="button" onclick="getImage(document.getElementById('link').value)">Submit</button>
+
+    <h1>Part 9</h1>
+    <p>Please input images links:</p>
+    <textarea id="links" name="img links" rows="4" cols="60"></textarea>
+    <br><button type="button" onclick="getImages(document.getElementById('links').value)">Submit</button>
+
+    <div id="info">
+        <p id="mouseCoord"></p>
+        <p id="lang"></p>
+        <p id="coord"></p>
+    </div>
+
+    <h1>Part 13</h1>
+    <div id="input1" class="inputstyled" contenteditable="true" onblur="saveToLocalStorage(this)"></div>
+    <div id="input2" class="inputstyled" contenteditable="true" onblur="saveToCookies(this)"></div>
+    <div id="input3" class="inputstyled" contenteditable="true" onblur="saveToSessionStorage(this)"></div>
+
+    <button type="button" id="bottomButton" onclick="scrollUp()">scroll up</button>
+
+    <h1>Part 15</h1>
+    <div id="block1">
+        <div id="block2"></div>
+    </div>
+
+    <h1>Part 16</h1>
+    <div id="graySquare" class="hidden" onclick="hideElement(this.id); document.body.style.overflow='auto'"></div>
+    <button type="button" onclick="showElement('graySquare'); document.body.style.overflow='hidden'">
+        Add gray square
+    </button>
+
+    <h1>Part 17</h1>
+    <form><input type="submit" value="GO" onclick="return false"></form>
+
+    <h1>Part 18</h1>
+    <div id="dropField">
+        <form>
+            <label id="myfile"> Choose or drag file:</label><br>
+            <input type="file" id="file" name="file">
+        </form>
+    </div>
+    <script>
+        document.getElementById('yellowbox').addEventListener("click", sayHello);
+        document.addEventListener("mousemove", function () { getCoords(event) });
+        document.getElementById('block1').addEventListener("click", function () { alert("I'm the red one") });
+        document.getElementById('block2').addEventListener("click", function () {
+            alert("I'm the yellow one");
+            event.stopPropagation();
+        });
+
+        document.getElementById('lang').innerHTML = navigator.language;
+        getLocation();
+
+        window.onscroll = function () { scrollFunction() };
+
+        document.getElementById('dropField').addEventListener("drop", drop);
+        document.getElementById('dropField').addEventListener("dragover", dragover);
+
+        function drop(event) {
+            document.getElementById('dropField').classList.remove('dragOverField');
+            }
+
+        function dragover(event) {
+            event.preventDefault();
+            document.getElementById('dropField').classList.add('dragOverField');
+
+        }
+
+
+        function scrollFunction() {
+            if (document.body.scrollTop >= window.innerHeight || document.documentElement.scrollTop >= window.innerHeight) {
+                bottomButton.style.display = "block";
+            } else {
+                bottomButton.style.display = "none";
+            }
+        }
+
+
+        function scrollUp() {
+            document.body.scrollTop = 0;
+            document.documentElement.scrollTop = 0;
+        }
+        function initText() {
+            document.getElementById('input1').innerHTML = localStorage.getItem('input1');
+            document.getElementById('input3').innerHTML = sessionStorage.getItem('input3');
+            let cookies = document.cookie.split(';');
+            for (const cookie of cookies) {
+                if (cookie.includes('text=')) {
+                    cookie.replace('text=', '');
+                    document.getElementById('input2').innerHTML = cookie;
+                }
+            }
+
+        }
+
+        function saveToLocalStorage(element) {
+            localStorage.setItem(element.id, element.innerHTML);
+        }
+
+        function saveToCookies(element) {
+            document.cookie = "text=" + element.innerHTML;
+            console.log("aaa" + document.cookie);
+        }
+
+        function saveToSessionStorage(element) {
+            sessionStorage.setItem(element.id, element.innerHTML);
+        }
+
+
+        function getLocation() {
+            if (navigator.geolocation) {
+                navigator.geolocation.watchPosition(showPosition);
+            } else {
+                document.getElementById('coord').innerHTML = "Geolocation is not supported by this browser.";
+            }
+        }
+
+        function showPosition(position) {
+            document.getElementById('coord').innerHTML = "Ш: " + position.coords.latitude +
+                ", Д: " + position.coords.longitude;
+        }
+
+        function getCoords(event) {
+            document.getElementById('mouseCoord').innerHTML = "X:" + event.clientX + " Y:" + event.clientY;
+        }
+
+        function getImages(links) {
+            let linksArr = links.split('\n');
+            for (const src of linksArr) {
+                getImage(src);
+            }
+        }
+
+        function getImage(link) {
+            let img = document.createElement("img");
+            img.src = link;
+            document.body.appendChild(img);
+        }
+
+        function sayHello() {
+            alert("Hello");
+            const element = document.getElementById('yellowbox');
+            element.removeEventListener("click", sayHello);
+            element.addEventListener("click", function () { hideElement("yellowbox"); })
+        }
+
+        function removeElement(id) {
+            document.getElementById(id).remove();
+        }
+
+        function hideElement(id) {
+            document.getElementById(id).classList.add('hidden');
+        }
+
+        function showElement(id) {
+            const element = document.getElementById(id);
+            element.classList.remove('hidden');
+        }
+
+        function switchVisibility(id) {
+            const element = document.getElementById(id);
+            if (element.classList.contains('hidden')) {
+                showElement(id);
+            } else {
+                hideElement(id);
+            }
+        }
+    </script>
+
+
+</body>
