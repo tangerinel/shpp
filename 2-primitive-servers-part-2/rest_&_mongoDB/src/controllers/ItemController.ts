@@ -3,7 +3,7 @@ import mongoose, { ObjectId } from "mongoose";
 import User, { IUser } from "../models/UserModel";
 import Item from "../models/ItemModel";
 
-const createItem = async (req: Request, res: Response) => {
+const createItem =  (req: Request, res: Response) => {
   const userId = req.session.userId;
   if (!userId) return res.status(500).json({ error: "no access" });
   const { text } = req.body;
@@ -12,8 +12,11 @@ const createItem = async (req: Request, res: Response) => {
     text,
     checked: false,
   });
-  await User.findOneAndUpdate({ _id: userId }, { $push: { items: item } });
-  return res.status(201).json({ _id: item._id });
+  User.findOneAndUpdate({ _id: userId }, { $push: { items: item } })
+    .then(() => {
+      return res.status(201).json({ _id: item._id });
+    })
+    .catch((error) => res.status(500).json({ error }));
 };
 
 const readAllItems = (req: Request, res: Response) => {
@@ -21,7 +24,7 @@ const readAllItems = (req: Request, res: Response) => {
   if (!userId) return res.status(500).json({ error: "forbidden" });
   User.findById(userId)
     .then((user) => {
-      return res.status(200).json({ items: user?.items });
+      return res.status(201).json({ items: user?.items });
     })
     .catch((error) => res.status(500).json({ error }));
 };
