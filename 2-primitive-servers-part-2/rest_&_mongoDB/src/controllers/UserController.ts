@@ -1,11 +1,12 @@
 import { Request, Response } from "express";
 import User, { IUser } from "../models/UserModel";
 
+
 const login = (req: Request, res: Response) => {
   const { login, pass } = req.body;
 
   User.findOne(
-    { login: login, pass: pass },
+    { login: login},
     function (err: Error, user: IUser) {
       if (err) {
         return res.status(500).send({ error: err });
@@ -13,8 +14,12 @@ const login = (req: Request, res: Response) => {
       if (!user) {
         return res.status(404).send();
       }
-      req.session.userId = user._id;
-      return res.json({ ok: true });
+      user.comparePassword(pass, function(err, isMatch) {
+        if (err) throw err;
+        if(isMatch){
+          req.session.userId = user._id;
+          return res.json({ ok: true });
+        } });
     }
   );
 };
@@ -28,7 +33,7 @@ const register = (req: Request, res: Response) => {
 
   let user: IUser = new User({
     login: login,
-    pass: pass,
+    pass: pass
   });
 
   return user
