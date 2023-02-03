@@ -2,7 +2,7 @@ import { Router } from "express";
 import itemController from "../controllers/ItemController";
 import userController from "../controllers/UserController";
 
-const router = Router();
+const router: Router = Router();
 
 //item router
 router.get("/items", itemController.readAllItems);

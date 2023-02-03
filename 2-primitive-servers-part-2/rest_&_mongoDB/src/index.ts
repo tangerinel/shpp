@@ -1,5 +1,5 @@
 "use strict";
-import express from "express";
+import express, { Express } from "express";
 import mongoose, { ObjectId } from "mongoose";
 import { join } from "path";
 import bodyParser from "body-parser";
@@ -27,7 +27,7 @@ mongoose
 
 /** starts server if mongoose connected */
 const startServer: Function = () => {
-  const app = express();
+  const app: Express = express();
 
   //to use cors instead of express.static uncoment this
   // app.use(

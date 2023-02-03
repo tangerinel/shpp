@@ -1,30 +1,31 @@
 import { Request, Response } from "express";
 import User, { IUser } from "../models/UserModel";
 
-
-const login = (req: Request, res: Response) => {
+const login = (req: Request, res: Response): void => {
   const { login, pass } = req.body;
 
-  User.findOne(
-    { login: login},
-    function (err: Error, user: IUser) {
-      if (err) {
-        return res.status(500).send({ error: err });
-      }
-      if (!user) {
-        return res.status(404).send();
-      }
-      user.comparePassword(pass, function(err, isMatch) {
-        if (err) throw err;
-        if(isMatch){
-          req.session.userId = user._id;
-          return res.json({ ok: true });
-        } });
+  User.findOne({ login: login }, function (err: Error, user: IUser):
+    | Response
+    | undefined {
+    if (err) {
+      return res.status(500).send({ error: err });
     }
-  );
+    if (!user) {
+      return res.status(404).send();
+    }
+    user.comparePassword(pass, function (err: Error, isMatch: boolean):
+      | Response
+      | undefined {
+      if (err) throw err;
+      if (isMatch) {
+        req.session.userId = user._id;
+        return res.json({ ok: true });
+      }
+    });
+  });
 };
 
-const register = (req: Request, res: Response) => {
+const register = (req: Request, res: Response): Promise<Response> => {
   const { login, pass } = req.body;
 
   User.findOne({ login: login }).then((user) => {
@@ -33,7 +34,7 @@ const register = (req: Request, res: Response) => {
 
   let user: IUser = new User({
     login: login,
-    pass: pass
+    pass: pass,
   });
 
   return user
@@ -42,8 +43,7 @@ const register = (req: Request, res: Response) => {
     .catch(() => res.status(500).json({ error: "Failed to register" }));
 };
 
-
-const logout = (req: Request, res: Response) => {
+const logout = (req: Request, res: Response): void => {
   req.session.destroy(() => {
     res.json({ ok: true });
   });
