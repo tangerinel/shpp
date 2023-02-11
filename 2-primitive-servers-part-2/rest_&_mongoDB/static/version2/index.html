@@ -1,48 +1,33 @@
 <!DOCTYPE html>
 <html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="login.css" />
+    <title>Login</title>
+  </head>
 
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="style.css">
-    <title>TODO</title>
-
-</head>
-
-<body>
-    <h1>TODO LIST</h1>
-
-    <!-- form to create new task -->
-    <form id="new-item-form">
-
-        <!-- new task input -->
-        <input type="text" class="text" id="new-item-input" placeholder="to water flowers">
-        <input type="submit" id="new-item-submit" value="Add task">
-
-    </form>
-
-<main>
-    <section class="item-list">
-
-        <h2>Tasks</h2>
-        <div id="items">
-        <div class="item">
-            <div id="submitted-task">
-            <input type="text"  class="text" value="I am a task. Do me!!!" readonly>
+  <body>
+    <div class="container">
+      <div class="form-box">
+        <h1>Sing In</h1>
+        <form>
+          <div class="user-input-fields">
+            <div class="username-input-field">
+              <input type="login" placeholder="login" id="login-field"/>
             </div>
-        <div class="item-settings">
-            <button class="edit"> <ion-icon  name="create-outline"></ion-icon></button>
-            <button class="delete"><ion-icon name="trash-outline"></ion-icon></button>
-        </div>
+            <div class="password-input-field">
+              <input type="password" placeholder="password" id="password-field"/>
+            </div>
+          </div>
+          <div class="action-buttons">
+            <button type="submit" id="register-button">Register</button>
+            <button type="submit" id="login-button">Login</button>
+          </div>
+        </form>
+      </div>
     </div>
-    </div>
-    </section>
-</main>
     <script src="main.js"></script>
-    <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
-    <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
-</body>
-
-
+  </body>
 </html>

@@ -11,7 +11,7 @@ const login = (req: Request, res: Response): void => {
       return res.status(500).send({ error: err });
     }
     if (!user) {
-      return res.status(404).send();
+      return res.status(404).send({error: 'not found'});
     }
     user.comparePassword(pass, function (err: Error, isMatch: boolean):
       | Response

@@ -37,7 +37,7 @@ const startServer: Function = () => {
   //   })
   // );
 
-  app.use(express.static(join(__dirname, "../static")));
+  app.use(express.static(join(__dirname, "../static/version2/")));
 
   app.use(bodyParser.json());
 
