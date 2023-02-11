@@ -1,5 +1,4 @@
 
-
 body{
     display: flex;
     flex-direction: column;
@@ -23,19 +22,17 @@ input, button{
     display: flex;
     padding: 10px 5px;
 }
+
 ion-icon {
     font-size: 25px;
     cursor: pointer;
     transition: 0.4s;
 }
 
-.item-setting{
-
-}
 #items .item {
     display: flex;
     justify-content: space-between;
-    background-color:darkseagreen;
+    background-color:rgb(171, 233, 171);;
     border-radius: 8px;
     padding: 5px;
 }
@@ -46,11 +43,11 @@ ion-icon {
 }
 
 .item #submitted-task .text{ 
-   color: white;
+   color: rgb(14, 77, 47);;
    transition: 0.4s;
 }
 .item #submitted-task .text :not(:read-only){ 
-    color: lightgray;
+    color: rgb(14, 77, 47);;
     transition: 0.4s;
  }
  
@@ -62,12 +59,12 @@ ion-icon {
     flex: 1 1 0%;
     margin-right: 5px;
     outline: auto;
-    outline-color: gray;
+    outline-color: rgb(14, 77, 47);;
 }
 
 #new-item-submit{
-    background-color:darkseagreen;
-    color: white;
+    background-color:rgb(171, 233, 171);;
+    color: rgb(14, 77, 47);;
     font-size: 15px;
     font-weight: 700;
     cursor: pointer;
@@ -82,7 +79,7 @@ opacity: 0.7;
 }
 
 .item-settings .edit{
-    color:white;
+    color:rgb(14, 77, 47);;
 }
 
 .item-settings .delete{
