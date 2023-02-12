@@ -23,7 +23,7 @@ input, button{
     padding: 10px 5px;
 }
 
-ion-icon {
+.fa{
     font-size: 25px;
     cursor: pointer;
     transition: 0.4s;
@@ -35,6 +35,7 @@ ion-icon {
     background-color:rgb(171, 233, 171);;
     border-radius: 8px;
     padding: 5px;
+    margin: 5px;
 }
 
 
