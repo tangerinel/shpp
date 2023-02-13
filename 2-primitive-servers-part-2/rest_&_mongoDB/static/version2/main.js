@@ -2,13 +2,20 @@ const route = "/router";
 const apiURL = "http://localhost:3005/api/";
 const apiVersion = "v2";
 const homepage = "homepage.html";
+const loginpage = "login.html";
 let tasks = [];
 
-const loginButton = document.querySelector("#login-button");
-const registerButton = document.querySelector("#register-button");
-
-loginButton?.addEventListener("click", login);
-registerButton?.addEventListener("click", register);
+function loadLogin() {
+  fetch(loginpage)
+    .then((x) => x.text())
+    .then((y) => (document.querySelector('html').innerHTML = y))
+    .then(() => {
+      const loginButton = document.querySelector("#login-button");
+      const registerButton = document.querySelector("#register-button");
+      loginButton?.addEventListener("click", login);
+      registerButton?.addEventListener("click", register);
+    });
+}
 
 function login(event) {
   if (event) event.preventDefault();
@@ -29,7 +36,7 @@ function login(event) {
       .then((res) => {
         if (res.ok) {
           localStorage.setItem("name", login);
-          loadUser();
+          getTasks();
         } else if (res.error === "not found") {
           alert("Такая комбинация логина и пароля не найдена");
         } else {
@@ -76,16 +83,18 @@ function getTasks() {
     credentials: "include",
     method: "POST",
   })
-    .then(res => res.json())
+    .then((res) => res.json())
     .then((response) => {
       if (response.error === "forbidden") {
-        login();
+        loadLogin();
       } else {
-        tasks = response.items.map((item) => {
-          item.editable = false;
-          return item;
-        });
-        tasks.forEach((task) => loadTask(task));
+        loadHomepage().then(()=>{
+          tasks = response.items.map((item) => {
+            item.editable = false;
+            return item;
+          });
+          tasks.forEach((task) => loadTask(task));
+        })
       }
     })
     .catch((error) => {
@@ -93,14 +102,11 @@ function getTasks() {
     });
 }
 
-function loadUser() {
+function loadHomepage() {
   // window.location.assign(homepage);
-  // getTasks();
-  //window.location.href = homepage;
-  fetch(homepage)
+   return fetch(homepage)
     .then((x) => x.text())
     .then((y) => (document.querySelector("html").innerHTML = y));
-    getTasks();
 }
 
 function loadTask(task) {
