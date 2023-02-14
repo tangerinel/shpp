@@ -8,7 +8,7 @@ let tasks = [];
 function loadLogin() {
   fetch(loginpage)
     .then((x) => x.text())
-    .then((y) => (document.querySelector('html').innerHTML = y))
+    .then((y) => (document.querySelector("html").innerHTML = y))
     .then(() => {
       const loginButton = document.querySelector("#login-button");
       const registerButton = document.querySelector("#register-button");
@@ -88,13 +88,13 @@ function getTasks() {
       if (response.error === "forbidden") {
         loadLogin();
       } else {
-        loadHomepage().then(()=>{
+        loadHomepage().then(() => {
           tasks = response.items.map((item) => {
             item.editable = false;
             return item;
           });
           tasks.forEach((task) => loadTask(task));
-        })
+        });
       }
     })
     .catch((error) => {
@@ -102,19 +102,114 @@ function getTasks() {
     });
 }
 
+function addTask(event) {
+  event.preventDefault();
+  let task = document.getElementById("new-item-input").value.trim();
+  if (task === "") return;
+  let request = JSON.stringify({ text: task });
+  const qs = { action: "createItem" };
+  fetch(apiURL + apiVersion + route + "?" + new URLSearchParams(qs), {
+    method: "POST",
+    body: request,
+    credentials: "include",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  })
+    .then((res) => res.json())
+    .then((response) => {
+      if (response._id) {
+        getTasks();
+      } else {
+        alert(
+          "Произошла ошибка. Посмотрите консоль разработчика чтоб увидеть подробности."
+        );
+      }
+    });
+}
+
+async function deleteTask(event) {
+  event.preventDefault();
+  let taskId = event.currentTarget.parentNode.parentNode.id;
+  let request = JSON.stringify({ _id: taskId });
+  const qs = { action: "deleteItem" };
+  fetch(apiURL + apiVersion + route + "?" + new URLSearchParams(qs), {
+    method: "POST",
+    body: request,
+    credentials: "include",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  })
+    .then((res) => res.json())
+    .then((response) => {
+      if (response["ok"] === true) {
+        getTasks();
+      } else {
+        alert(
+          "Произошла ошибка. Посмотрите консоль разработчика чтоб увидеть подробности."
+        );
+      }
+    });
+}
+
+function updateTask(task){
+  let request = JSON.stringify({ text: task.text, _id: task._id, checked: task.checked });
+  const qs = {action: 'editItem'};
+
+  fetch(apiURL + apiVersion + route +  '?' + new URLSearchParams(qs), {
+      method: 'POST',
+      body: request,
+      credentials: 'include',
+      headers: {
+          'Content-Type': 'application/json'
+      },
+  })
+      .then(res => res.json())
+      .then(() => {
+          getTasks()
+      });
+}
+
+function editTask(event) {
+  event.preventDefault();
+  let taskId = event.currentTarget.parentNode.parentNode.id;
+  let task = tasks.find((element) => element._id === taskId);
+  let inputElement = event.currentTarget.parentNode.previousSibling.firstChild;
+  inputElement.removeAttribute('readonly');
+  inputElement.focus();
+}
+
+function updateTaskStatus(event) {
+  event.preventDefault();
+  let taskId = event.currentTarget.parentNode.id;
+  let task = tasks.find((element) => element._id === taskId);
+  task.checked = !task.checked;
+  updateTask(task);
+}
+
 function loadHomepage() {
   // window.location.assign(homepage);
-   return fetch(homepage)
+  return fetch(homepage)
     .then((x) => x.text())
-    .then((y) => (document.querySelector("html").innerHTML = y));
+    .then((y) => (document.querySelector("html").innerHTML = y))
+    .then(() => {
+      const addTaskButton = document.getElementById("new-item-submit");
+
+      addTaskButton.addEventListener("click", addTask);
+    });
 }
 
 function loadTask(task) {
   const itemDiv = document.createElement("div");
+
   itemDiv.classList.add("item");
+  itemDiv.setAttribute("id", task._id);
 
   const checkedButton = document.createElement("button");
-  checkedButton.innerHTML = '<i class="fa fa-square-o"></i>';
+  checkedButton.innerHTML = task.checked
+    ? '<i class="fa fa-check-square-o"></i>'
+    : '<i class="fa fa-square-o"></i>';
   checkedButton.classList.add("check");
   itemDiv.appendChild(checkedButton);
 
@@ -126,7 +221,7 @@ function loadTask(task) {
   itemInputEl.classList.add("text");
   itemInputEl.type = "text";
   itemInputEl.value = task.text;
-  itemInputEl.setAttribute("readonly", "readonly");
+  itemInputEl.setAttribute("readonly", 'readonly');
   submittedTaskDiv.appendChild(itemInputEl);
 
   const itemSettingDiv = document.createElement("div");
@@ -144,4 +239,7 @@ function loadTask(task) {
   itemDiv.appendChild(itemSettingDiv);
 
   document.getElementById("items").appendChild(itemDiv);
+  deleteButton.addEventListener("click", deleteTask);
+  editButton.addEventListener("click", editTask);
+  checkedButton.addEventListener("click", updateTaskStatus);
 }

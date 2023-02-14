@@ -43,13 +43,20 @@ input, button{
     flex: 1 1 0%;
 }
 
+.item #submitted-task input{ 
+    width: 98%;
+}
+
+
 .item #submitted-task .text{ 
    color: rgb(14, 77, 47);;
    transition: 0.4s;
 }
-.item #submitted-task .text :not(:read-only){ 
-    color: rgb(14, 77, 47);;
+.item #submitted-task input:not(:read-only):focus{ 
+    color: red;
     transition: 0.4s;
+    outline-style: dashed;
+    outline-color: red;
  }
  
 #new-item-form{
