@@ -25,12 +25,11 @@ const login = (req: Request, res: Response): void => {
   });
 };
 
-const register = (req: Request, res: Response): Promise<Response> => {
+const register = async (req: Request, res: Response): Promise<Response> => {
   const { login, pass } = req.body;
 
-  User.findOne({ login: login }).then((user) => {
-    if (user) return res.status(404).json({ error: "User already exist" });
-  });
+  let existedUser = await User.findOne({ login: login });
+  if(existedUser) return res.status((500)).json({ error: "User already exist" });
 
   let user: IUser = new User({
     login: login,

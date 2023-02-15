@@ -153,22 +153,26 @@ async function deleteTask(event) {
     });
 }
 
-function updateTask(task){
-  let request = JSON.stringify({ text: task.text, _id: task._id, checked: task.checked });
-  const qs = {action: 'editItem'};
+function updateTask(task) {
+  let request = JSON.stringify({
+    text: task.text,
+    _id: task._id,
+    checked: task.checked,
+  });
+  const qs = { action: "editItem" };
 
-  fetch(apiURL + apiVersion + route +  '?' + new URLSearchParams(qs), {
-      method: 'POST',
-      body: request,
-      credentials: 'include',
-      headers: {
-          'Content-Type': 'application/json'
-      },
+  fetch(apiURL + apiVersion + route + "?" + new URLSearchParams(qs), {
+    method: "POST",
+    body: request,
+    credentials: "include",
+    headers: {
+      "Content-Type": "application/json",
+    },
   })
-      .then(res => res.json())
-      .then(() => {
-          getTasks()
-      });
+    .then((res) => res.json())
+    .then(() => {
+      getTasks();
+    });
 }
 
 function editTask(event) {
@@ -176,8 +180,27 @@ function editTask(event) {
   let taskId = event.currentTarget.parentNode.parentNode.id;
   let task = tasks.find((element) => element._id === taskId);
   let inputElement = event.currentTarget.parentNode.previousSibling.firstChild;
-  inputElement.removeAttribute('readonly');
+  inputElement.removeAttribute("readonly");
   inputElement.focus();
+  const pressedKey = (event) => {
+    if (event.key === "Enter") {
+      event.preventDefault();
+      inputElement.setAttribute("readonly", "readonly");
+      task.text = inputElement.value;
+      updateTask(task);
+      inputElement.removeEventListener("keypress", pressedKey);
+      inputElement.removeEventListener("focusout", focusout);
+    }
+  };
+  const focusout = () => {
+    inputElement.value = task.text;
+    inputElement.setAttribute("readonly", "readonly");
+    inputElement.removeEventListener("keypress", pressedKey);
+    inputElement.removeEventListener("focusout", focusout);
+  };
+
+  inputElement.addEventListener("keypress", pressedKey);
+  inputElement.addEventListener("focusout", focusout);
 }
 
 function updateTaskStatus(event) {
@@ -195,11 +218,29 @@ function loadHomepage() {
     .then((y) => (document.querySelector("html").innerHTML = y))
     .then(() => {
       const addTaskButton = document.getElementById("new-item-submit");
+      const logoutButton = document.querySelector(".logout");
 
       addTaskButton.addEventListener("click", addTask);
+      logoutButton.addEventListener("click", logout);
     });
 }
 
+function logout(event) {
+  event.preventDefault();
+
+  const qs = { action: "logout" };
+  fetch(apiURL + apiVersion + route + "?" + new URLSearchParams(qs), {
+    method: "POST",
+    credentials: "include",
+  })
+    .then((res) => res.json())
+    .then((response) => {
+      if (response.ok) {
+        localStorage.clear();
+        loadLogin();
+      }
+    });
+}
 function loadTask(task) {
   const itemDiv = document.createElement("div");
 
@@ -221,7 +262,7 @@ function loadTask(task) {
   itemInputEl.classList.add("text");
   itemInputEl.type = "text";
   itemInputEl.value = task.text;
-  itemInputEl.setAttribute("readonly", 'readonly');
+  itemInputEl.setAttribute("readonly", "readonly");
   submittedTaskDiv.appendChild(itemInputEl);
 
   const itemSettingDiv = document.createElement("div");
