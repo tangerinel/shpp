@@ -5,7 +5,7 @@ dotenv.config();
 const MYSQL_USER: string = process.env.MYSQL_USER || "";
 const MYSQL_PASSWORD: string = process.env.MYSQL_PASSWORD || "";
 const MYSQL_DATABASE: string =  process.env.MYSQL_DATABASE || "";
-const PORT: number = process.env.PORT ? Number(process.env.PORT) : 3000;
+const PORT: string = process.env.PORT ? process.env.PORT : '3000';
 
 export const config = {
   mysql: {
