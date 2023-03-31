@@ -2,14 +2,8 @@ import db from '../config/database';
 
 class Book {
 
-    title: string;
-    authors: string;
-    description: string;
-    year: number;
-    clicks: number;
-
-    constructor (title: string, authors: string,
-         description: string, year:number, clicks: number){
+    constructor (title, authors,
+         description, year, clicks){
             this.title = title;
             this.authors = authors;
             this.description = description;
@@ -25,7 +19,7 @@ class Book {
           });
     }
 
-    findBookById (id: number, callback){
+    findBookById (id, callback){
         const sql = 'SELECT * FROM books WHERE id = ?';
         db.query(sql, [id], (err, result)=>{
             if (err) throw err;
