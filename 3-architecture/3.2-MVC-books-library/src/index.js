@@ -3,12 +3,11 @@ import path from "path";
 import { fileURLToPath } from 'url';
 import bodyParser from "body-parser";
 import config from './config/config.js';
-import db  from './config/database.js';
-import useDatabase from "./controllers/databaseController.js";
+import initLibraryDatabase from "./controllers/databaseController.js";
 
 const startServer = ()=>{
     const app = express();
-    useDatabase(db);
+    initLibraryDatabase();
     const __filename = fileURLToPath(import.meta.url);
     const __dirname = path.dirname(__filename);
     app.use (express.static(path.join(__dirname, "../static/")));
