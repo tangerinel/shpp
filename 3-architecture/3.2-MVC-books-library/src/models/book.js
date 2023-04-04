@@ -18,7 +18,7 @@ class Book {
     });
   }
 
-  findBookById(id, callback) {
+  getBookById(id, callback) {
     const sql = "SELECT * FROM books WHERE id = ?";
     db.query(sql, [id], (err, result) => {
       if (err) throw err;

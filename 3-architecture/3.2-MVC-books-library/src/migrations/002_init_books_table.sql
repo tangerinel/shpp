@@ -2,13 +2,13 @@
 CREATE TABLE IF NOT EXISTS books (
   id INTEGER PRIMARY KEY NOT NULL AUTO_INCREMENT,
   title VARCHAR(255) NOT NULL,
-  `description` TEXT NOT NULL,
-  `year` INTEGER NOT NULL,
+  description TEXT NOT NULL,
+  year INTEGER NOT NULL,
   clicks INTEGER NOT NULL DEFAULT 0,
   image_url VARCHAR(255) UNIQUE
 );
 
-INSERT IGNORE INTO books(title, `description`, `year`, image_url)
+INSERT IGNORE INTO books(title, description, year, image_url)
 VALUES
 ('СИ++ И КОМПЬЮТЕРНАЯ ГРАФИКА','Лекции и практикум по программированию на Си++ ',2001,'22.jpg'),
 
