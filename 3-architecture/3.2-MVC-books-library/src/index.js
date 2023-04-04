@@ -3,7 +3,7 @@ import path from "path";
 import { fileURLToPath } from "url";
 import bodyParser from "body-parser";
 import config from "./config/config.js";
-import initLibraryDatabase from "./controllers/databaseController.js";
+import initLibraryDatabase from "./models/database.js";
 
 const startServer = () => {
   const app = express();
