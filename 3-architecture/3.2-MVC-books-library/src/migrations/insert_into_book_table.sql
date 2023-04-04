@@ -1,4 +1,4 @@
-INSERT INTO books(title, `description`, `year`, image_url)
+INSERT IGNORE INTO books(title, `description`, `year`, image_url)
 VALUES
 ('СИ++ И КОМПЬЮТЕРНАЯ ГРАФИКА','Лекции и практикум по программированию на Си++ ',2001,'22.jpg'),
 

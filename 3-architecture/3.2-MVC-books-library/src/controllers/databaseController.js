@@ -4,19 +4,22 @@ import db from "../config/database.js";
 export default async function initLibraryDatabase() {
   try {
     await createAndUseDatabase();
-    await createBookTable();
+    await createBooksTable();
+    await createAuthorsTable();
   } catch (error) {
     console.log(error);
   }
 }
 
-function createBookTable() {
+function createAuthorsTable() {}
+
+function createBooksTable() {
   const table = fs.readFileSync(
     "src/migrations/create_book_table.sql",
     "utf-8"
   );
   const insertValues = fs.readFileSync(
-    "src/migrations/insert_in_book_table.sql",
+    "src/migrations/insert_into_book_table.sql",
     "utf-8"
   );
   return db
