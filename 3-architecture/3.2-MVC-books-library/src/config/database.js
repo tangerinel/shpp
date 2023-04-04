@@ -1,7 +1,8 @@
-import mysql from 'mysql2';
+import mysql from "mysql2";
 import config from "./config.js";
 
-export default mysql.createConnection({
+export default mysql
+  .createConnection({
     host: config.mysql.host,
     user: config.mysql.user,
     password: config.mysql.password,
@@ -9,4 +10,5 @@ export default mysql.createConnection({
     connectionLimit: 10,
     queueLimit: 0,
     // database: config.mysql.database,
-  }).promise();
+  })
+  .promise();

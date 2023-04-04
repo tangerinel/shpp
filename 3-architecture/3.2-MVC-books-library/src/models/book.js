@@ -1,54 +1,66 @@
-import db from '../config/database';
+import db from "../config/database";
 
 class Book {
+  constructor(title, authors, description, year, clicks, image_url) {
+    this.title = title;
+    this.authors = authors;
+    this.description = description;
+    this.year = year;
+    this.clicks = clicks;
+    this.image_url = image_url;
+  }
 
-    constructor (title, authors,
-         description, year, clicks, image_url){
-            this.title = title;
-            this.authors = authors;
-            this.description = description;
-            this.year = year;
-            this.clicks = clicks;
-            this.image_url = image_url;
-    }
+  readAllBooks(callback) {
+    const sql = "SELECT * FROM books";
+    db.query(sql, (err, result) => {
+      if (err) throw err;
+      callback(result);
+    });
+  }
 
-    readAllBooks(callback){
-        const sql ='SELECT * FROM books';
-        db.query(sql, (err, result) => {
-            if (err) throw err;
-            callback(result);
-          });
-    }
+  findBookById(id, callback) {
+    const sql = "SELECT * FROM books WHERE id = ?";
+    db.query(sql, [id], (err, result) => {
+      if (err) throw err;
+      callback(result[0]);
+    });
+  }
 
-    findBookById (id, callback){
-        const sql = 'SELECT * FROM books WHERE id = ?';
-        db.query(sql, [id], (err, result)=>{
-            if (err) throw err;
-            callback(result[0]);
-        });
-    }
+  save() {
+    const sql =
+      "INSERT INTO books (title, author, description, year, clicks, image_url) VALUES (?, ?, ?, ?, ?, ?)";
+    const values = [
+      this.title,
+      this.authors,
+      this.description,
+      this.year,
+      this.clicks,
+      this.image_url,
+    ];
+    db.query(sql, values, (err, result) => {
+      if (err) throw err;
+      console.log(`Book ${this.title} saved to database`);
+      return result;
+    });
+  }
 
-    save() {
-        const sql = 'INSERT INTO books (title, author, description, year, clicks, image_url) VALUES (?, ?, ?, ?, ?, ?)';
-        const values = [this.title, this.authors, this.description, this.year, this.clicks, this.image_url];
-        db.query(sql, values, (err, result) => {
-          if (err) throw err;
-          console.log(`Book ${this.title} saved to database`);
-          return result;
-        });
-    }
+  updateBookById(id, callback) {
+    const sql =
+      "UPDATE books SET title = ?, authors = ?, description = ?, year = ?, clicks = ?, image_url = ? WHERE id = ?";
+    const values = [
+      this.title,
+      this.authors,
+      this.description,
+      this.year,
+      this.clicks,
+      this.image_url,
+      id,
+    ];
+    db.query(sql, values, (err, result) => {
+      if (err) throw err;
+      callback(result.affectedRows);
+    });
+  }
 
-    updateBookById(id, callback){
-        const sql =   'UPDATE books SET title = ?, authors = ?, description = ?, year = ?, clicks = ?, image_url = ? WHERE id = ?';
-        const values =  [this.title, this.authors, this.description,this.year, this.clicks, this.image_url, id];
-        db.query(sql, values, (err, result) => {
-              if (err) throw err;
-              callback(result.affectedRows);
-            }
-          );
-    }
-
-    deleteBookById (id, callback){
-
-    }
+  deleteBookById(id, callback) {}
 }
