@@ -12,5 +12,9 @@ export default {
       filepath: "src/migrations/003_init_authors_table.sql",
       messages: ["Authors table is created", "Authors table is initialized"],
     },
+    {
+      filepath: "src/migrations/004_init_mapping_table.sql",
+      messages: ["Mapping table is created", "Mapping table is initialized"],
+    },
   ],
 };
