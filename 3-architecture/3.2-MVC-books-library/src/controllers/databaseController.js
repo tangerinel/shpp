@@ -3,15 +3,35 @@ import db from "../config/database.js";
 
 export default async function initLibraryDatabase() {
   try {
-    await createAndUseDatabase();
-    await createBooksTable();
-    await createAuthorsTable();
+    executeSqlFile("src/migrations/create_database.sql", [
+      "Database library created",
+      "Database is in use",
+    ]);
+
+    // await createAndUseDatabase();
+    // await createBooksTable();
+    // await createAuthorsTable();
   } catch (error) {
     console.log(error);
   }
 }
 
-function createAuthorsTable() {}
+function executeSqlFile(filepath, messages) {
+  const script = fs.readFileSync(filepath, "utf-8");
+  const queries = script.split(";");
+  queries.forEach((query, index) => {
+    if (query.trim()) {
+      return db
+        .query(query)
+        .then(() => console.log(messages[index]))
+        .catch((error) => console.log(error));
+    }
+  });
+  // return db
+  //   .query(script)
+  //   .then(() => console.log(message))
+  //   .catch((error) => console.log(error));
+}
 
 function createBooksTable() {
   const table = fs.readFileSync(
