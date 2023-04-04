@@ -1,16 +1,12 @@
 import fs from "fs";
 import db from "../config/database.js";
+import migrations from "../config/migrations.js";
 
 export default async function initLibraryDatabase() {
   try {
-    executeSqlFile("src/migrations/create_database.sql", [
-      "Database library created",
-      "Database is in use",
-    ]);
-
-    // await createAndUseDatabase();
-    // await createBooksTable();
-    // await createAuthorsTable();
+    migrations.initializeDB.forEach(async (migration) => {
+      await executeSqlFile(migration.filepath, migration.messages);
+    });
   } catch (error) {
     console.log(error);
   }
@@ -23,58 +19,12 @@ function executeSqlFile(filepath, messages) {
     if (query.trim()) {
       return db
         .query(query)
-        .then(() => console.log(messages[index]))
+        .then(() =>
+          console.log(
+            index < messages.length ? messages[index] : "SQL script executed"
+          )
+        )
         .catch((error) => console.log(error));
     }
   });
-  // return db
-  //   .query(script)
-  //   .then(() => console.log(message))
-  //   .catch((error) => console.log(error));
-}
-
-function createBooksTable() {
-  const table = fs.readFileSync(
-    "src/migrations/create_book_table.sql",
-    "utf-8"
-  );
-  const insertValues = fs.readFileSync(
-    "src/migrations/insert_into_book_table.sql",
-    "utf-8"
-  );
-  return db
-    .query(table)
-    .then(() => {
-      console.log("Books table created");
-      db.query(insertValues)
-        .then(() => console.log("Books table initialized"))
-        .catch((err) => console.log(err));
-    })
-    .catch((error) => console.log(error));
-}
-// create database if not exists and switch to it
-function createAndUseDatabase() {
-  const createDatabase = fs.readFileSync(
-    "src/migrations/create_database.sql",
-    "utf-8"
-  );
-  const useDatabase = fs.readFileSync(
-    "src/migrations/use_database.sql",
-    "utf-8"
-  );
-  return db
-    .query(createDatabase)
-    .then(() => {
-      console.log("Database created");
-      db.query(useDatabase)
-        .then(() => {
-          console.log("Database is in use");
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    })
-    .catch((err) => {
-      console.log(err);
-    });
 }

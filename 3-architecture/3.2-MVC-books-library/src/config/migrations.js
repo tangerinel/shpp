@@ -10,7 +10,7 @@ export default {
     },
     {
       filepath: "src/migrations/003_init_authors_table.sql",
-      messages: ["Authors table is created", " Books table is initialized"],
+      messages: ["Authors table is created", "Authors table is initialized"],
     },
   ],
 };
