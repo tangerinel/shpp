@@ -5,3 +5,4 @@
 resume/
 **/sessions/
 **/.DS_Store
+.idea
