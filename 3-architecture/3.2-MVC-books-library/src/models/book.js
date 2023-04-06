@@ -1,4 +1,4 @@
-import db from "../config/database";
+import connection from "../config/connection";
 
 class Book {
   constructor(title, authors, description, year, clicks, image_url) {
@@ -12,7 +12,7 @@ class Book {
 
   readAllBooks(callback) {
     const sql = "SELECT * FROM books";
-    db.query(sql, (err, result) => {
+    connection.query(sql, (err, result) => {
       if (err) throw err;
       callback(result);
     });
@@ -20,7 +20,7 @@ class Book {
 
   getBookById(id, callback) {
     const sql = "SELECT * FROM books WHERE id = ?";
-    db.query(sql, [id], (err, result) => {
+    connection.query(sql, [id], (err, result) => {
       if (err) throw err;
       callback(result[0]);
     });
@@ -37,7 +37,7 @@ class Book {
       this.clicks,
       this.image_url,
     ];
-    db.query(sql, values, (err, result) => {
+    connection.query(sql, values, (err, result) => {
       if (err) throw err;
       console.log(`Book ${this.title} saved to database`);
       return result;
@@ -56,7 +56,7 @@ class Book {
       this.image_url,
       id,
     ];
-    db.query(sql, values, (err, result) => {
+    connection.query(sql, values, (err, result) => {
       if (err) throw err;
       callback(result.affectedRows);
     });

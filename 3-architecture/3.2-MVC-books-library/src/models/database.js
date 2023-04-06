@@ -1,15 +1,43 @@
 import fs from "fs";
-import db from "../config/database.js";
+import mysqldump from "mysqldump";
+import connection from "../config/connection.js";
 import migrations from "../config/migrations.js";
 
-export default async function initLibraryDatabase() {
+async function initLibraryDatabase() {
   try {
     migrations.initializeDB.forEach(async (migration) => {
-      await executeSqlFile(migration.filepath, migration.messages);
+      executeSqlFile(migration.filepath, migration.messages);
     });
   } catch (error) {
     console.log(error);
   }
+}
+function performBackup() {
+  const backupFileName = `../path/to/backup/backup_${new Date()
+    .toISOString()
+    .replace(/:/g, "-")}.sql`;
+  mysqldump({ connection, dumpToFile: backupFileName }, (err) => {
+    if (err) {
+      console.log(err);
+    } else {
+      console.log(`Database backup created at: ${backupFilePath}`);
+    }
+  });
+}
+function deleteSoftDeletedRecords() {
+  queries = [
+    `DELETE FROM books WHERE is_deleted = 1`,
+    `DELETE FROM mapping WHERE is_deleted = 1`,
+    `DELETE FROM authors WHERE is_deleted = 1`,
+  ];
+  queries.forEach((query) => {
+    connection
+      .query(query)
+      .then((result) => {
+        console.log(`Deleted ${result.affectedRows} soft deleted records`);
+      })
+      .catch((err) => console.log(err));
+  });
 }
 
 function executeSqlFile(filepath, messages) {
@@ -17,7 +45,7 @@ function executeSqlFile(filepath, messages) {
   const queries = script.split(";");
   queries.forEach((query, index) => {
     if (query.trim()) {
-      return db
+      connection
         .query(query)
         .then(() =>
           console.log(
@@ -28,3 +56,4 @@ function executeSqlFile(filepath, messages) {
     }
   });
 }
+export { initLibraryDatabase, performBackup, deleteSoftDeletedRecords };
