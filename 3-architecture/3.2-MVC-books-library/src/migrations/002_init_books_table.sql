@@ -5,7 +5,8 @@ CREATE TABLE IF NOT EXISTS books (
   description TEXT NOT NULL,
   year INTEGER NOT NULL,
   clicks INTEGER NOT NULL DEFAULT 0,
-  image_url VARCHAR(255) UNIQUE
+  image_url VARCHAR(255) UNIQUE,
+  deleted INTEGER DEFAULT 0
 );
 
 INSERT IGNORE INTO books(title, description, year, image_url)
