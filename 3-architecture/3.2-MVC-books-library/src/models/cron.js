@@ -7,7 +7,7 @@ const backupJob = new cron.CronJob("0 0 * * *", () => {
 });
 
 // Create a cron job for deleting soft deleted records every day at 2 PM (14:00)
-const deleteJob = new cron.CronJob("0 14 * * *", () => {
+const deleteJob = new cron.CronJob("44 12 * * *", async () => {
   deleteSoftDeletedRecords();
 });
 

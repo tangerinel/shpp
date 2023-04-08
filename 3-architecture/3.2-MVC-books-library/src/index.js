@@ -8,15 +8,16 @@ import { startCron } from "./models/cron.js";
 
 const startServer = async () => {
   const app = express();
+
   const __filename = fileURLToPath(import.meta.url);
   const __dirname = path.dirname(__filename);
   app.use(express.static(path.join(__dirname, "../static/")));
   app.use(bodyParser.json());
-  app.listen(config.server.port, async () => {
+  app.listen(config.server.port, () => {
     console.log(`SERVER STARTED ON PORT ${config.server.port}`);
+    initLibraryDatabase();
+    startCron();
   });
-  await initLibraryDatabase();
-  startCron();
 };
 
 startServer();
